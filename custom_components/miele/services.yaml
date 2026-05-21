@@ -1,11 +1,12 @@
 # Services descriptions for Miele
 
 process_action:
-  target:
-    device:
-      integration: "miele"
-
   fields:
+    device_id:
+      selector:
+        device:
+          integration: miele
+      required: true
     action:
       # Field name as shown in UI
       # name: Action
@@ -30,10 +31,12 @@ process_action:
           translation_key: process_action_options
 
 generic_action:
-  target:
-    device:
-      integration: "miele"
   fields:
+    device_id:
+      selector:
+        device:
+          integration: miele
+      required: true
     processAction:
       example: 1
       description: Set processAction
@@ -91,10 +94,12 @@ raw:
 set_program:
   name: Set program
   description: Set and start program with optional parameters.
-  target:
-    device:
-      integration: "miele"
   fields:
+    device_id:
+      selector:
+        device:
+          integration: miele
+      required: true
     programId:
       description: Set program Id
       example: 24
