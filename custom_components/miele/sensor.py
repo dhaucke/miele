@@ -863,6 +863,11 @@ class MieleSensor(MieleEntity, SensorEntity):
             current_consumption = self.coordinator.data[self._ent].get(
                 self.entity_description.data_tag
             )
+            # Miele's API does not always populate ecoFeedback (e.g. short
+            # maintenance programs never report it) - show 0 instead of
+            # "unknown" so the entity always carries a value.
+            if current_consumption is None:
+                return 0
             # Show 0 consumption when the appliance is not running,
             # to correctly reset utility meter cycle. Ignore this when
             # appliance is not connected (it may disconnect while a program
@@ -900,6 +905,15 @@ class MieleSensor(MieleEntity, SensorEntity):
                 and current_consumption is not None
                 and current_consumption > 0
                 and not self._last_consumption_valid
+            ):
+                return 0
+
+        if self.entity_description.key in ["energy_forecast", "water_forecast"]:
+            # Same reasoning as consumption above: ecoFeedback may not be
+            # populated yet, show 0 instead of "unknown".
+            if (
+                self.coordinator.data[self._ent].get(self.entity_description.data_tag)
+                is None
             ):
                 return 0
 
