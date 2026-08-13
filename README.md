@@ -94,8 +94,9 @@ Ein wiederkehrendes Thema ist die Übersetzung von Programmnamen und -phasen —
 ## Entwicklung
 
 - Mindestens Python 3.13 wird benötigt.
-- `git clone https://github.com/{dein_user}/miele && cd miele && make install_dev`
-- Vor jedem Push `make lint` ausführen.
+- `git clone https://github.com/{dein_user}/miele && cd miele && ./scripts/setup` (installiert Abhängigkeiten und die pre-commit-Hooks).
+- `./scripts/develop` startet eine lokale Home-Assistant-Instanz mit dieser Integration geladen (siehe auch die VS-Code-Task "Run Home Assistant on port 9123").
+- Vor jedem Push `./scripts/lint` ausführen.
 
 Ein VS-Code-Dev-Container ist ebenfalls eingerichtet (`.devcontainer.json`), falls das gegenüber einer lokalen Umgebung bevorzugt wird.
 
@@ -190,8 +191,9 @@ One recurring issue is the translation of program names and phases — Miele doc
 ## Development
 
 - Make sure you have at least Python 3.13 installed.
-- `git clone https://github.com/{your_user}/miele && cd miele && make install_dev`
-- Run `make lint` before pushing.
+- `git clone https://github.com/{your_user}/miele && cd miele && ./scripts/setup` (installs dependencies and the pre-commit hooks).
+- `./scripts/develop` starts a local Home Assistant instance with this integration loaded (also available as the "Run Home Assistant on port 9123" VS Code task).
+- Run `./scripts/lint` before pushing.
 
 A VS Code Dev Container is also set up (`.devcontainer.json`) if you prefer that over a local environment.
 
