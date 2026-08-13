@@ -7,7 +7,7 @@
 [![Release](https://img.shields.io/github/v/release/dhaucke/miele?style=flat-square)](https://github.com/dhaucke/miele/releases/latest)
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5?style=flat-square)](https://github.com/hacs/integration)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-18BCF2?style=flat-square)](https://www.home-assistant.io/)
-[![License](https://img.shields.io/github/license/dhaucke/miele?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/dhaucke/miele?style=flat-square)](https://github.com/dhaucke/miele/blob/main/LICENSE)
 
 **Wasserverbrauch · Energieverbrauch · Verbrauchsprognose · Füllstände · Live-Status**
 
