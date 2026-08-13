@@ -13,11 +13,11 @@ from homeassistant.helpers.service import async_extract_config_entry_ids
 
 from .const import (
     AMBIENT_COLORS,
-    API,
     COLORS,
     DEVICE_NAME,
     DOMAIN,
     LIGHT,
+    MIELE_API_CLIENT,
     MODES,
     POWER_OFF,
     POWER_ON,
@@ -119,7 +119,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:  # noqa: C901
                     if val != DOMAIN:
                         serno = val
 
-            _api = hass.data[DOMAIN][our_entry_ids[0]][API]
+            _api = hass.data[DOMAIN][our_entry_ids[0]][MIELE_API_CLIENT]
             act = PROCESS_ACTIONS[call.data["action"]]
             try:
                 await _api.send_action(serno, {PROCESS_ACTION: act})
@@ -148,7 +148,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:  # noqa: C901
                     if val != DOMAIN:
                         serno = val
 
-            _api = hass.data[DOMAIN][our_entry_ids[0]][API]
+            _api = hass.data[DOMAIN][our_entry_ids[0]][MIELE_API_CLIENT]
             data = call.data.copy()
             if CONF_ENTITY_ID in data:
                 data.pop(CONF_ENTITY_ID)
@@ -164,7 +164,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:  # noqa: C901
     async def send_raw(call: ServiceCall):
         _LOGGER.debug("Call: %s", call)
         account = list(hass.data[DOMAIN].keys())[0]
-        _api = hass.data[DOMAIN][account][API]
+        _api = hass.data[DOMAIN][account][MIELE_API_CLIENT]
         try:
             await _api.send_action(call.data["serialno"], call.data["extra"])
         except aiohttp.ClientResponseError as ex:
@@ -190,7 +190,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:  # noqa: C901
                     if val != DOMAIN:
                         serno = val
 
-            _api = hass.data[DOMAIN][our_entry_ids[0]][API]
+            _api = hass.data[DOMAIN][our_entry_ids[0]][MIELE_API_CLIENT]
             data = call.data.copy()
             if CONF_ENTITY_ID in data:
                 data.pop(CONF_ENTITY_ID)

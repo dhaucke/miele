@@ -12,6 +12,7 @@ from typing import Any
 
 from aiohttp import ClientResponseError
 import flatdict
+from pymiele import MieleAPI
 import voluptuous as vol
 
 from homeassistant.components import persistent_notification
@@ -53,6 +54,7 @@ from .const import (
     CONF_VALUE_RAW,
     DOMAIN,
     MANUFACTURER,
+    MIELE_API_CLIENT,
     VERSION,
     MieleAppliance,
 )
@@ -180,6 +182,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id][API] = AsyncConfigEntryAuth(
         aiohttp_client.async_get_clientsession(hass), session
     )
+    # MieleAPI wraps the auth object and provides the higher-level
+    # send_action/set_target_temperature/listen_events methods; raw
+    # .request() calls keep using the AsyncConfigEntryAuth instance above.
+    hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT] = MieleAPI(
+        hass.data[DOMAIN][entry.entry_id][API]
+    )
 
     if ACTIONS not in hass.data[DOMAIN][entry.entry_id]:
         hass.data[DOMAIN][entry.entry_id][ACTIONS] = {}
@@ -269,7 +277,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         coordinator.async_set_updated_data(coordinator.data)
 
     hass.data[DOMAIN][entry.entry_id]["listener"] = asyncio.create_task(
-        hass.data[DOMAIN][entry.entry_id][API].listen_events(
+        hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT].listen_events(
             data_callback=_callback_update_data,
             actions_callback=_callback_update_actions,
         )

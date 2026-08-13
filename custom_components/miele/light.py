@@ -23,11 +23,11 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from . import get_coordinator
 from .const import (
     AMBIENT_LIGHT,
-    API,
     DOMAIN,
     LIGHT,
     LIGHT_OFF,
     LIGHT_ON,
+    MIELE_API_CLIENT,
     MieleAppliance,
 )
 from .entity import MieleEntity
@@ -126,7 +126,7 @@ class MieleLight(MieleEntity, LightEntity):
     ):
         """Initialize the light."""
         super().__init__(coordinator, idx, ent, description)
-        self._api = hass.data[DOMAIN][entry.entry_id][API]
+        self._api = hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT]
 
         _LOGGER.debug("Init light %s", ent)
         self._attr_supported_features = self.entity_description.supported_features

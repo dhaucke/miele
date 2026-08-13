@@ -3,7 +3,7 @@
 from enum import IntEnum
 
 DOMAIN = "miele"
-VERSION = "2026.8.3"
+VERSION = "2026.8.4"
 API_READ_TIMEOUT = 20
 MANUFACTURER = "Miele"
 
@@ -1130,3 +1130,4 @@ AMBIENT_COLORS = {
 
 ACTIONS = "actions"
 API = "api"
+MIELE_API_CLIENT = "miele_api_client"

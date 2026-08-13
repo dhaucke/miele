@@ -19,8 +19,8 @@ from .const import (
     ACT_START,
     ACT_STOP,
     ACTIONS,
-    API,
     DOMAIN,
+    MIELE_API_CLIENT,
     POWER_OFF,
     POWER_ON,
     PROCESS_ACTION,
@@ -132,7 +132,7 @@ class MieleButton(MieleEntity, ButtonEntity):
     ):
         """Initialize the button."""
         super().__init__(coordinator, idx, ent, description)
-        self._api = hass.data[DOMAIN][entry.entry_id][API]
+        self._api = hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT]
         self._api_data = hass.data[DOMAIN][entry.entry_id]
         _LOGGER.debug("init button %s", ent)
 

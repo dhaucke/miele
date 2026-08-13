@@ -21,8 +21,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from . import get_coordinator
 from .const import (
-    API,
     DOMAIN,
+    MIELE_API_CLIENT,
     MieleAppliance,
 )
 from .entity import MieleEntity
@@ -171,7 +171,7 @@ class MieleNumber(MieleEntity, NumberEntity):
     ):
         """Initialize the number."""
         super().__init__(coordinator, idx, ent, description)
-        self._api = hass.data[DOMAIN][entry.entry_id][API]
+        self._api = hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT]
         self._ed = description
         _LOGGER.debug("Init number %s", ent)
         # entity-first, consistent with MieleEntity/core's unique_id scheme

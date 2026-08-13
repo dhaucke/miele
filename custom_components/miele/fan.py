@@ -27,8 +27,8 @@ from homeassistant.util.percentage import (
 
 from . import get_coordinator
 from .const import (
-    API,
     DOMAIN,
+    MIELE_API_CLIENT,
     POWER_OFF,
     POWER_ON,
     VENTILATION_STEP,
@@ -128,7 +128,7 @@ class MieleFan(MieleEntity, FanEntity):
     ):
         """Initialize the fan."""
         super().__init__(coordinator, idx, ent, description)
-        self._api = hass.data[DOMAIN][entry.entry_id][API]
+        self._api = hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT]
 
         _LOGGER.debug("Init fan %s", ent)
         self._attr_supported_features = self.entity_description.supported_features

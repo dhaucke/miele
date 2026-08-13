@@ -22,8 +22,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from . import get_coordinator
 from .const import (
     ACTIONS,
-    API,
     DOMAIN,
+    MIELE_API_CLIENT,
     TARGET_TEMPERATURE,
     MieleAppliance,
 )
@@ -170,7 +170,7 @@ class MieleClimate(MieleEntity, ClimateEntity):
         """Initialize the climate entity."""
         super().__init__(coordinator, idx, ent, description)
         self._eid = hass.data[DOMAIN][entry.entry_id]
-        self._api = self._eid[API]
+        self._api = self._eid[MIELE_API_CLIENT]
 
         self._ed = description
         _LOGGER.debug("init climate %s", ent)

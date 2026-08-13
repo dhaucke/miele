@@ -21,8 +21,8 @@ from .const import (
     ACT_STOP_SUPERCOOL,
     ACT_STOP_SUPERFREEZE,
     ACTIONS,
-    API,
     DOMAIN,
+    MIELE_API_CLIENT,
     POWER_OFF,
     POWER_ON,
     PROCESS_ACTION,
@@ -149,7 +149,7 @@ class MieleSwitch(MieleEntity, SwitchEntity):
     ):
         """Initialize the switch."""
         super().__init__(coordinator, idx, ent, description)
-        self._api = hass.data[DOMAIN][entry.entry_id][API]
+        self._api = hass.data[DOMAIN][entry.entry_id][MIELE_API_CLIENT]
         self._api_data = hass.data[DOMAIN][entry.entry_id]
         _LOGGER.debug("init switch %s", ent)
 
