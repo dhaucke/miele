@@ -29,7 +29,7 @@ from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
 
-from . import get_coordinator
+from . import get_aux_coordinator, get_coordinator
 from .const import (
     APPLIANCE_ICONS,
     CONF_PROGRAM_IDS,
@@ -53,7 +53,7 @@ from .const import (
     STATE_STATUS_WAITING_TO_START,
     MieleAppliance,
 )
-from .entity import MieleEntity
+from .entity import MieleAuxEntity, MieleEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -729,6 +729,115 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
 )
 
 
+@dataclass
+class MieleAuxSensorDescription(SensorEntityDescription):
+    """Class describing Miele auxiliary (filling level) sensor entities."""
+
+    data_tag: str | None = None
+
+
+@dataclass
+class MieleAuxSensorDefinition:
+    """Class for defining auxiliary sensor entities."""
+
+    types: tuple[MieleAppliance, ...]
+    description: MieleAuxSensorDescription = None
+
+
+# Keys/data_tags match core's POLLED_SENSOR_TYPES so these entities are
+# migration-compatible if a user later switches to (or back from) core.
+AUX_SENSOR_TYPES: Final[tuple[MieleAuxSensorDefinition, ...]] = (
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.WASHING_MACHINE, MieleAppliance.WASHER_DRYER],
+        description=MieleAuxSensorDescription(
+            key="twin_dos_1_level",
+            data_tag="twinDosContainer1FillingLevel",
+            translation_key="twin_dos_1_level",
+            icon="mdi:cup-water",
+            native_unit_of_measurement=PERCENTAGE,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.WASHING_MACHINE, MieleAppliance.WASHER_DRYER],
+        description=MieleAuxSensorDescription(
+            key="twin_dos_2_level",
+            data_tag="twinDosContainer2FillingLevel",
+            translation_key="twin_dos_2_level",
+            icon="mdi:cup-water",
+            native_unit_of_measurement=PERCENTAGE,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.DISHWASHER],
+        description=MieleAuxSensorDescription(
+            key="power_disk_level",
+            data_tag="powerDiscFillingLevel",
+            translation_key="power_disk_level",
+            icon="mdi:disc",
+            native_unit_of_measurement=PERCENTAGE,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.DISHWASHER],
+        description=MieleAuxSensorDescription(
+            key="salt_level",
+            data_tag="saltFillingLevel",
+            translation_key="salt_level",
+            icon="mdi:shaker-outline",
+            native_unit_of_measurement=PERCENTAGE,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.DISHWASHER],
+        description=MieleAuxSensorDescription(
+            key="rinse_aid_level",
+            data_tag="rinseAidFillingLevel",
+            translation_key="rinse_aid_level",
+            icon="mdi:cup-water",
+            native_unit_of_measurement=PERCENTAGE,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.COFFEE_SYSTEM],
+        description=MieleAuxSensorDescription(
+            key="descaling_counter",
+            data_tag="descalingCounter",
+            translation_key="descaling_counter",
+            icon="mdi:water-alert-outline",
+            state_class=SensorStateClass.TOTAL_INCREASING,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.COFFEE_SYSTEM],
+        description=MieleAuxSensorDescription(
+            key="degreasing_counter",
+            data_tag="degreasingCounter",
+            translation_key="degreasing_counter",
+            icon="mdi:oil",
+            state_class=SensorStateClass.TOTAL_INCREASING,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+    MieleAuxSensorDefinition(
+        types=[MieleAppliance.COFFEE_SYSTEM],
+        description=MieleAuxSensorDescription(
+            key="milk_cleaning_counter",
+            data_tag="milkCleaningCounter",
+            translation_key="milk_cleaning_counter",
+            icon="mdi:spray-bottle",
+            state_class=SensorStateClass.TOTAL_INCREASING,
+            entity_category=EntityCategory.DIAGNOSTIC,
+        ),
+    ),
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigType,
@@ -736,6 +845,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up the sensor platform."""
     coordinator = await get_coordinator(hass, config_entry)
+    aux_coordinator = await get_aux_coordinator(hass, config_entry)
 
     entities = [
         MieleSensor(coordinator, idx, ent, definition.description)
@@ -743,6 +853,13 @@ async def async_setup_entry(
         for definition in SENSOR_TYPES
         if coordinator.data[ent]["ident|type|value_raw"] in definition.types
     ]
+
+    entities.extend(
+        MieleAuxSensor(aux_coordinator, ent, definition.description)
+        for ent in coordinator.data
+        for definition in AUX_SENSOR_TYPES
+        if coordinator.data[ent]["ident|type|value_raw"] in definition.types
+    )
 
     async_add_entities(entities)
 
@@ -1060,3 +1177,27 @@ class MieleSensor(MieleEntity, SensorEntity):
     def _get_custom_mapped_value(self, raw_value):
         """Return sensor value mapping for current entity."""
         return self._get_sensor_config().get(CONF_PROGRAM_IDS, {}).get(raw_value, None)
+
+
+class MieleAuxSensor(MieleAuxEntity, SensorEntity):
+    """Representation of a filling level / consumable counter sensor."""
+
+    entity_description: MieleAuxSensorDescription
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        return self.coordinator.data.get(self._ent, {}).get(
+            self.entity_description.data_tag
+        )
+
+    @property
+    def available(self):
+        """Return the availability of the entity."""
+        return (
+            self.coordinator.last_update_success
+            and self.coordinator.data.get(self._ent, {}).get(
+                self.entity_description.data_tag
+            )
+            is not None
+        )

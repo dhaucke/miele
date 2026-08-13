@@ -134,6 +134,12 @@
       "battery": {
         "name": "Batteri"
       },
+      "degreasing_counter": {
+        "name": "Degreasing counter"
+      },
+      "descaling_counter": {
+        "name": "Descaling counter"
+      },
       "drying_step": {
         "name": "Torkningsläge",
         "state": {
@@ -164,6 +170,12 @@
       },
       "food_core_temperature": {
         "name": "Stektemperatur"
+      },
+      "milk_cleaning_counter": {
+        "name": "Milk cleaning counter"
+      },
+      "power_disk_level": {
+        "name": "PowerDisc level"
       },
       "program_id": {
         "name": "Program",
@@ -422,8 +434,14 @@
           "own_program": "Eget program"
         }
       },
+      "rinse_aid_level": {
+        "name": "Rinse aid level"
+      },
       "remaining_time": {
         "name": "Återstående tid"
+      },
+      "salt_level": {
+        "name": "Salt level"
       },
       "spin_speed": {
         "name": "Centrifugering"
@@ -491,6 +509,12 @@
       },
       "temperature_zone_3": {
         "name": "Temperatur zon 3"
+      },
+      "twin_dos_1_level": {
+        "name": "TwinDos container 1 level"
+      },
+      "twin_dos_2_level": {
+        "name": "TwinDos container 2 level"
       },
       "water_consumption": {
         "name": "Vattenförbrukning"

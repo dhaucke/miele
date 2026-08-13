@@ -44,3 +44,27 @@ class MieleEntity(CoordinatorEntity):
                 "ident|xkmIdentLabel|releaseVersion"
             ],
         )
+
+
+class MieleAuxEntity(CoordinatorEntity):
+    """Base class for Miele entities backed by the auxiliary (filling levels) coordinator.
+
+    Only sets the device identifier - HA merges this into the device
+    already created by the main-coordinator entities of the same
+    serial number, so no name/model/etc. duplication is needed here.
+    """
+
+    _attr_has_entity_name = True
+
+    def __init__(
+        self,
+        coordinator: DataUpdateCoordinator,
+        ent,
+        description: EntityDescription,
+    ) -> None:
+        """Initialize the entity."""
+        super().__init__(coordinator)
+        self._ent = ent
+        self.entity_description = description
+        self._attr_unique_id = f"{self._ent}-{self.entity_description.key}"
+        self._attr_device_info = DeviceInfo(identifiers={(DOMAIN, self._ent)})

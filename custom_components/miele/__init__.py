@@ -194,6 +194,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = await get_coordinator(hass, entry)
     if not coordinator.last_update_success:
         await coordinator.async_config_entry_first_refresh()
+    await get_aux_coordinator(hass, entry)
     serialnumbers = list(coordinator.data.keys())
     if len(serialnumbers) == 0:
         _LOGGER.warning("No devices found in API for this account")
@@ -385,6 +386,55 @@ async def get_coordinator(
     )
     await hass.data[DOMAIN][entry.entry_id]["coordinator"].async_refresh()
     return hass.data[DOMAIN][entry.entry_id]["coordinator"]
+
+
+async def get_aux_coordinator(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+) -> DataUpdateCoordinator:
+    """Get the data update coordinator for consumables filling levels."""
+    if "aux_coordinator" in hass.data[DOMAIN][entry.entry_id]:
+        return hass.data[DOMAIN][entry.entry_id]["aux_coordinator"]
+
+    async def async_fetch_levels():
+        miele_api = hass.data[DOMAIN][entry.entry_id][API]
+        try:
+            async with asyncio.timeout(API_READ_TIMEOUT):
+                res = await miele_api.request(
+                    "GET",
+                    "/devices/fillingLevels",
+                    agent_suffix=f"Miele for Home Assistant/{VERSION}",
+                )
+            if res.status != 200:
+                _LOGGER.debug(
+                    "HTTP status %s fetching filling levels, keeping last known values",
+                    res.status,
+                )
+                return hass.data[DOMAIN][entry.entry_id].get(
+                    "aux_coordinator_data", {}
+                )
+            result = await res.json()
+        except (TimeoutError, JSONDecodeError) as error:
+            _LOGGER.debug(
+                "Error fetching filling levels, keeping last known values: %s", error
+            )
+            return hass.data[DOMAIN][entry.entry_id].get("aux_coordinator_data", {})
+
+        flat_result: dict = {
+            item["deviceId"]: item.get("fillingLevels", {}) for item in result
+        }
+        hass.data[DOMAIN][entry.entry_id]["aux_coordinator_data"] = flat_result
+        return flat_result
+
+    hass.data[DOMAIN][entry.entry_id]["aux_coordinator"] = DataUpdateCoordinator(
+        hass,
+        logging.getLogger(__name__),
+        name=f"{DOMAIN}_aux",
+        update_method=async_fetch_levels,
+        update_interval=timedelta(seconds=60),
+    )
+    await hass.data[DOMAIN][entry.entry_id]["aux_coordinator"].async_refresh()
+    return hass.data[DOMAIN][entry.entry_id]["aux_coordinator"]
 
 
 async def _setup_sensor_config(hass: HomeAssistant, config: ConfigType):

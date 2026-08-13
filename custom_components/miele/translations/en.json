@@ -134,6 +134,12 @@
       "battery": {
         "name": "Battery"
       },
+      "degreasing_counter": {
+        "name": "Degreasing counter"
+      },
+      "descaling_counter": {
+        "name": "Descaling counter"
+      },
       "drying_step": {
         "name": "Drying step",
         "state": {
@@ -164,6 +170,12 @@
       },
       "food_core_temperature": {
         "name": "Food core temperature"
+      },
+      "milk_cleaning_counter": {
+        "name": "Milk cleaning counter"
+      },
+      "power_disk_level": {
+        "name": "PowerDisc level"
       },
       "program_id": {
         "name": "Program",
@@ -791,8 +803,14 @@
           "own_program": "Own program"
         }
       },
+      "rinse_aid_level": {
+        "name": "Rinse aid level"
+      },
       "remaining_time": {
         "name": "Remaining time"
+      },
+      "salt_level": {
+        "name": "Salt level"
       },
       "spin_speed": {
         "name": "Spin speed"
@@ -860,6 +878,12 @@
       },
       "temperature_zone_3": {
         "name": "Temperature zone 3"
+      },
+      "twin_dos_1_level": {
+        "name": "TwinDos container 1 level"
+      },
+      "twin_dos_2_level": {
+        "name": "TwinDos container 2 level"
       },
       "water_consumption": {
         "name": "Water consumption"
