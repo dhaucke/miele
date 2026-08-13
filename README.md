@@ -1,144 +1,82 @@
-[![Miele](https://img.shields.io/github/v/release/astrandb/miele)](https://github.com/astrandb/miele/releases/latest) [![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/integration) ![Validate with hassfest](https://github.com/astrandb/miele/workflows/Validate%20with%20hassfest/badge.svg) ![Maintenance](https://img.shields.io/maintenance/yes/2025.svg) [![Miele_downloads](https://img.shields.io/github/downloads/astrandb/miele/total)](https://github.com/astrandb/miele) [![Miele_downloads](https://img.shields.io/github/downloads/astrandb/miele/latest/total)](https://github.com/astrandb/miele)
+[![Miele](https://img.shields.io/github/v/release/dhaucke/miele)](https://github.com/dhaucke/miele/releases/latest) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration) ![Validate with hassfest](https://github.com/dhaucke/miele/workflows/Validate%20with%20hassfest/badge.svg) [![License](https://img.shields.io/github/license/dhaucke/miele)](LICENSE)
 
-# DEPRECATED, Not supported - Miele Integration for Home Assistant
+# Miele Integration for Home Assistant
 
-# IMPORTANT - Moving to Home Assistant core
-I have got many questions over the years why this integration is not part of Home Assistant core. The short answer is that the migration would need a more or less total refactoring of the code and I have not had the time needed previously.
+Cloud-based monitoring and control of Miele appliances for Home Assistant, with the `ecoFeedback` water/energy consumption sensors that the official core integration does not (yet) expose.
 
-But you can always change your mind...
+## Why this fork exists
 
-I have now been working hard behind the curtain together with members from the Home Assistant core team and we could release the first version in may 2025.
+This is a fork of [astrandb/miele](https://github.com/astrandb/miele), the original custom integration this project is built on. In May 2025 Miele support was added to Home Assistant core, and the original maintainer marked this custom component deprecated in favor of it — support for the custom version ended in January 2026.
 
-**This custom integration will not be actively maintained from now on. However bugfixes and similar fixes will be taken care of until january 2026.**
+The official core integration is a great foundation, but as of this writing it does not yet expose the `ecoFeedback` sensors this custom integration has always had:
 
-The first release will not be 100% feature complete. The remaining bits will have to wait until next month, or the month after. There are some compatibility issues with the current custom component and it will be difficult to go back when you have installed the new official version. Remember to backup your HA system before moving to the official integration.
+- current water consumption per cycle
+- current energy consumption per cycle
+- water consumption forecast
+- energy consumption forecast
 
-Documentation for the new version can be found here: https://home-assistant.io/integrations/miele/ Please read the docs carefully. If you are missing a feature in the documentation, it is probably because it is not ready yet and you should consider if it not better to wait another month before migrating.
+If you don't need those, the [official core integration](https://home-assistant.io/integrations/miele/) is the better long-term choice — it ships with Home Assistant, needs no HACS, and is what upstream now recommends. This fork exists specifically for people who relied on the consumption sensors and don't want to lose them.
 
-## How to migrate to Home Assistant core version
+## What this integration does
 
-Note that there are some differences in the internal naming of entities and that you might lose some statistics when upgrading. Don't forget item 6 below.
+The capabilities are based on Miele API version 1.0.7. The official capability overview is here: https://www.miele.com/developer/assets/API_V1.x.x_capabilities_by_device.pdf. Note that this matrix is not entirely accurate — some devices lack support the matrix claims they have, and some devices support features the matrix doesn't mark.
 
-Please follow these instructions in detail and do things in the order described. If you take shortcuts you may end up with problems than can be hard to recover from.
-
-1. Make a backup of your system - You may want to revert.
-1. Delete the integration. Go to Settings->Devices & services. Click on the Miele card and select delete from the 3-dot menu. You will be asked if you want to keep your credentials. You can delete them, as they are not needed for the new version.
-1. Go to the HACS menu and open the 3-dot menu on the Miele entry. Select Delete.
-1. Restart Home Assistant.
-1. Your Miele devices should be auto-discovered by HA after a short while, just click "Add" on Settings->Devices & services and the installation will take off. If you get an error message during account linking, clearing of the browser cache often helps (Ctrl-F5 or Cmd R). Sometimes a restart of the browser or doing the install procedure with the browser in incognito/private mode is necessary. A few users have reported that they had visit the profile/partner app page in the Miele app and delete all Home Assistant related entries before the account linking was accepted.
-1. Check all automations, scripts and dashboards. The entity names may have changed internally so an overhaul of your set-up may be needed.
-
-
-## The custom component (HACS)
-
-The capabilities are based on Miele API version 1.0.7. The official capability overview is here https://www.miele.com/developer/assets/API_V1.x.x_capabilities_by_device.pdf . Note that this matrix is not entirely correct. Some devices lack support and some devices support features that are not marked.
-
-All supported appliances will show a status sensor, some appliances will show more sensors, however only freezers, refrigerators, coffee machines, dishwashers and washer/dryers will have a more complete support. Changes on the appliances will be pushed to HA and displayed immediately. As a backup the status is read from the cloud every 60 seconds.
-
-Read more on design philosophy etc in the [Wiki](https://github.com/astrandb/miele/wiki)
+All supported appliances show a status sensor; some show more. Freezers, refrigerators, coffee machines, dishwashers and washer/dryers have the most complete support. Changes on the appliances are pushed to Home Assistant and shown immediately. As a backup, status is also polled from the Miele cloud every 60 seconds.
 
 ## Installation
 
-Make sure you have the app credentials available for your account with Miele cloud. You have to register on https://www.miele.com/developer/.
-If you have an existing integration with the name "miele" you are recommended to remove it before attemping to install this one.
+You need Miele cloud app credentials, registered at https://developer.miele.com/get-involved. (The older `miele.com/developer` registration page has moved there — several people hit "unable to sign up" issues on the old page before finding this.)
 
-### Preferred download method
+**If the official core Miele integration is currently set up**, remove it first (Settings → Devices & services → Miele card → three-dot menu → Delete) — both share the `miele` domain, and Home Assistant will otherwise load whichever loads first.
 
-- Use HACS, search for Miele integration and download it.
-- Restart Home Assistant
+### HACS (preferred)
 
-### Manual download method
+1. In HACS, open the three-dot menu → **Custom repositories**.
+2. Add `https://github.com/dhaucke/miele` as type **Integration**.
+3. Install **Miele** and restart Home Assistant.
 
-- Copy all files from custom_components/miele in this repo to your config custom_components/miele
-- Restart Home Assistant
+### Manual
+
+- Copy `custom_components/miele` from this repo into your Home Assistant `custom_components/miele`.
+- Restart Home Assistant.
 
 ### Setup
 
-Goto `Integrations` > `Add Integration` and select `Miele`. Sometimes you must refresh the browser cache to find the integration.
+Go to **Settings → Devices & services → Add integration → Miele**. You may need to clear your browser cache to find it after installing.
 
-Follow instructions to authenticate with Miele cloud server. First, you'll provide the app credentials acquired at https://www.miele.com/developer/.
-Next, you'll sign in using your Miele account. Allow full access for the Home Assistant client.
+Follow the prompts to authenticate: first enter the app credentials from https://developer.miele.com/get-involved, then sign in with your Miele account and allow full access for the Home Assistant client.
 
-### Support - Wiki - Documentation
+## Support
 
-Documentation (at least some...) can be found in the [wiki](https://github.com/astrandb/miele/wiki)
+This is a small, unpaid fork maintained to keep one feature alive, not a funded or team-maintained project. Please don't expect the same response time as the original upstream project had.
 
-[Discussion forum](https://github.com/astrandb/miele/discussions)
-
-[Discord chat](https://discord.gg/Us4PSG74vw)
-
-### Development
-
-There are many ways to setup a development environment.
-
-#### Dev Container
-
-The recommended option is to use the VS Code Dev Container. You need to have Docker installed.
-
-1. For best performance, clone the repo in a named volume.
-1. Open a new, empty window in VS Code.
-1. Press `Ctrl`+`Shift`+`P` and select `Dev Containers: Clone Respository in Named Container Volume`
-1. Fill in your repo and your chosen names at the prompts
-1. Wait for the container to be built
-
-1. Press `Ctrl`+`Shift`+`P` and select `Tasks: Run Task` > `Run Home Assistant on port 9123`.
-1. Wait for Home Assistant to start and go to http://localhost:9123/.
-1. Walk through the Home Assistant first-launch UI.
-1. Go to http://localhost:9123/config/integrations, click `Add Integration` and add the `Miele` integration.
-1. To debug, press `F5` to attach to the Home Assistant running in the container.
-1. Your configuration.yaml will be persistent (survives rebuild of container).
-
-#### Without a Dev Container
-
-Alternatively, you can run Home Assistant directly on your machine/WSL2. The following procedure works fine in the hands of the maintainer developing with VS Code on WSL2/Windows.
-
-- Make sure you have at least python3.11 installed on your WSL.
-- Create a fork on github
-
-```
-$ git clone https://github.com/{your_user}/miele
-$ cd miele
-$ make install_dev
-```
-
-Home Assistant has defined a code style. Run `make lint` before pushing your changes to align with the peferred style.
-
-There are many ways to test the integration, three examples are:
-
-- run Home Assistant in the development container as described above
-
-- copy all files in `custom_comonents/miele` to `custom_components/miele` in your HA configuration directory
-- mount `custom_components/miele` into a HA development container
-
-### Translation
-To handle submission of translations we are using [Lokalise](https://lokalise.com/login/). They provide us with an amazing platform that is easy to use and maintain.
-
-To help out with the translation of Miele integration  you need an account on Lokalise, the easiest way to get one is to [click here](https://lokalise.com/login/)  then select "Log in with GitHub".
-
-When you have created the account, [click here](https://app.lokalise.com/public/50153460650965e9a01e21.29484567/) to join the project. If you want to add a new language, please open an issue.
-
-The translations are pulled when a new release of the integration is prepared. So you must wait until there is a new release before you look for your updates.
-
-If you want to add new elements that need translation you should enter them in /translations/en.json and submit a PR. The new keys will appear in Lokalise when the PR is merged.
+- [Issues](https://github.com/dhaucke/miele/issues)
+- Original project's [wiki](https://github.com/astrandb/miele/wiki) and [discussions](https://github.com/astrandb/miele/discussions) are still a good reference for general usage questions, since most of the underlying behavior is unchanged.
 
 ### Debugging and filing issues
 
-If you find bugs or other issues please download diagnostic information from the Miele integration card or from the device page and attach the file to your issue report.
-One recurring issue is the translation of Program name and phases. This is due to sparse, if any, documentation from Miele. One way to assist with the fact collection is to install a blueprint automation that will log states from the selected sensor with some additional information to the Home Assistant log. Create one automation for each sensor you want to monitor
+If you find bugs, please download diagnostic information from the Miele integration card or the device page and attach it to your issue report.
 
-The blueprint can be found here https://gist.github.com/astrandb/5ec47d6979b590639d23144142ae3100
+One recurring issue is the translation of program names and phases — Miele documents this sparsely, if at all. The original maintainer built a blueprint automation that logs states from a selected sensor to the Home Assistant log to help collect this data; it still applies here: https://gist.github.com/astrandb/5ec47d6979b590639d23144142ae3100
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgist.github.com%2Fastrandb%2F5ec47d6979b590639d23144142ae3100)
 
+## Development
+
+- Make sure you have at least Python 3.13 installed.
+- `git clone https://github.com/{your_user}/miele && cd miele && make install_dev`
+- Run `make lint` before pushing.
+
+A VS Code Dev Container is also set up (`.devcontainer.json`) if you prefer that over a local environment.
+
+### Translations
+
+There is no Lokalise project for this fork. To add or fix a translation, edit the relevant file directly under `custom_components/miele/translations/` and open a PR.
+
 ## Disclaimer
 
-The package and its author are not affiliated with Miele. Use at your own risk.
+This package and its author are not affiliated with Miele. Use at your own risk.
 
 ## License
 
-The package is released under the MIT license.
-
-## Support and cooperation
-This project is supported by
-
-[<img src="https://raw.githubusercontent.com/astrandb/documents/fef0776bbb7924e0253b9755d7928631fb19d5c7/img/Lokalise_logo_colour_black_text.svg" width=120>](https://lokalise.com)
+Released under the MIT license. The original copyright notice from [astrandb/miele](https://github.com/astrandb/miele) is preserved in [LICENSE](LICENSE) and in the project history.

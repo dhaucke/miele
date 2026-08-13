@@ -1,5 +1,5 @@
 {
-  "name": "astrandb/dev-miele",
+  "name": "dhaucke/dev-miele",
   "image": "mcr.microsoft.com/devcontainers/python:3.13",
   "postCreateCommand": "scripts/setup",
   "appPort": [

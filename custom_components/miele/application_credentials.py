@@ -13,5 +13,5 @@ async def async_get_authorization_server(hass: HomeAssistant) -> AuthorizationSe
 async def async_get_description_placeholders(hass: HomeAssistant) -> dict[str, str]:
     """Return description placeholders for the credentials dialog."""
     return {
-        "register_url": "https://www.miele.com/f/com/en/register_api.aspx",
+        "register_url": "https://developer.miele.com/get-involved",
     }

@@ -25,7 +25,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import (
     aiohttp_client,
     config_validation as cv,
-    issue_registry as ir,
 )
 from homeassistant.helpers.config_entry_oauth2_flow import (
     ImplementationUnavailableError,
@@ -278,25 +277,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     await async_setup_services(hass)
-
-    ir.async_create_issue(
-        hass,
-        DOMAIN,
-        "final_migration",
-        breaks_in_ha_version="2025.4.0",
-        is_fixable=False,
-        is_persistent=False,
-        learn_more_url=("https://github.com/astrandb/miele?tab=readme-ov-file"),
-        severity=ir.IssueSeverity.WARNING,
-        translation_key="final_migration",
-        translation_placeholders={
-            "info_url": "https://home-assistant.io/integrations/miele",
-            "instructions": (
-                "https://github.com/astrandb/miele?tab=readme-ov-file#"
-                "important---moving-to-home-assistant-core"
-            ),
-        },
-    )
 
     return True
 
