@@ -461,6 +461,17 @@ MIGRATE_KEYS = {
 }
 
 
+MIGRATE_KEYS_V3 = {
+    "state_target_temperature_1": "state_target_temperature",
+    "stateRemainingTime": "state_remaining_time",
+    "stateRemainingTimeAbs": "state_remaining_time_abs",
+    "stateStartTime": "state_start_time",
+    "stateStartTimeAbs": "state_start_time_abs",
+    "stateElapsedTime": "state_elapsed_time",
+    "stateElapsedTimeAbs": "state_elapsed_time_abs",
+}
+
+
 async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle config entry migration."""
 
@@ -476,9 +487,15 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 "switch",
                 "vacuum",
             ]:
-                key, entity_id = entity_entry.unique_id.split("-")
-                new_key = MIGRATE_KEYS.get(key, key)
-                new_unique_id = f"{entity_id}-{new_key}"
+                parts = entity_entry.unique_id.split("-")
+                if len(parts) != 2:
+                    return None
+                key, entity_id = parts
+                if key not in MIGRATE_KEYS:
+                    # already in the entity_id-key format (e.g. taken over
+                    # from HA core), nothing to migrate
+                    return None
+                new_unique_id = f"{entity_id}-{MIGRATE_KEYS[key]}"
                 return {"new_unique_id": new_unique_id}
 
             return None
@@ -490,5 +507,51 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             version=2,
         )
         _LOGGER.info("Migration of unique_id completed")
+
+    if entry.version < 3:
+
+        def migrate_entities_v3(entity_entry: RegistryEntry) -> dict[str, Any] | None:
+            if entity_entry.domain == "sensor":
+                parts = entity_entry.unique_id.split("-")
+                if len(parts) != 2:
+                    return None
+                entity_id, key = parts
+                if key not in MIGRATE_KEYS_V3:
+                    return None
+                return {"new_unique_id": f"{entity_id}-{MIGRATE_KEYS_V3[key]}"}
+
+            if entity_entry.domain == "climate":
+                # old fork format was key-first: "thermostat-{ent}",
+                # "thermostat-1-{ent}", "thermostat-2-{ent}"
+                parts = entity_entry.unique_id.split("-")
+                if not parts or parts[0] != "thermostat":
+                    return None
+                entity_id = parts[-1]
+                if len(parts) == 2:
+                    return {"new_unique_id": f"{entity_id}-thermostat-1"}
+                if len(parts) == 3 and parts[1] == "1":
+                    return {"new_unique_id": f"{entity_id}-thermostat2-2"}
+                if len(parts) == 3 and parts[1] == "2":
+                    return {"new_unique_id": f"{entity_id}-thermostat3-3"}
+                return None
+
+            if entity_entry.domain == "number":
+                # old fork format: "plate-{zone}{ent}" (no separator
+                # between zone digit and entity id)
+                if not entity_entry.unique_id.startswith("plate-"):
+                    return None
+                rest = entity_entry.unique_id.removeprefix("plate-")
+                zone_digit, entity_id = rest[0], rest[1:]
+                return {"new_unique_id": f"{entity_id}-plate-{zone_digit}"}
+
+            return None
+
+        _LOGGER.info("Migrating unique_id to version 3")
+        await async_migrate_entries(hass, entry.entry_id, migrate_entities_v3)
+        hass.config_entries.async_update_entry(
+            entry,
+            version=3,
+        )
+        _LOGGER.info("Migration of unique_id to version 3 completed")
 
     return True

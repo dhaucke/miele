@@ -164,7 +164,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="state_temperature3",
+            key="state_temperature_3",
             data_tag="state|temperature|2|value_raw",
             device_class=SensorDeviceClass.TEMPERATURE,
             translation_key="temperature_zone_3",
@@ -196,7 +196,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="state_target_temperature_1",
+            key="state_target_temperature",
             data_tag="state|targetTemperature|0|value_raw",
             device_class=SensorDeviceClass.TEMPERATURE,
             translation_key="target_temperature",
@@ -458,7 +458,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateRemainingTime",
+            key="state_remaining_time",
             data_tag="state|remainingTime|0",
             data_tag1="state|remainingTime|1",
             translation_key="remaining_time",
@@ -487,7 +487,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateRemainingTimeAbs",
+            key="state_remaining_time_abs",
             data_tag="state|remainingTime|0",
             data_tag1="state|remainingTime|1",
             # also account for time until start in finish time (delayed start)
@@ -517,7 +517,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateStartTime",
+            key="state_start_time",
             data_tag="state|startTime|0",
             data_tag1="state|startTime|1",
             translation_key="start_time",
@@ -545,7 +545,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateStartTimeAbs",
+            key="state_start_time_abs",
             data_tag="state|startTime|0",
             data_tag1="state|startTime|1",
             translation_key="start_at",
@@ -570,7 +570,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateElapsedTime",
+            key="state_elapsed_time",
             data_tag="state|elapsedTime|0",
             data_tag1="state|elapsedTime|1",
             translation_key="elapsed_time",
@@ -596,7 +596,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.STEAM_OVEN_MK2,
         ],
         description=MieleSensorDescription(
-            key="stateElapsedTimeAbs",
+            key="state_elapsed_time_abs",
             data_tag="state|elapsedTime|0",
             data_tag1="state|elapsedTime|1",
             translation_key="started_at",
@@ -611,7 +611,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.WASHER_DRYER,
         ],
         description=MieleSensorDescription(
-            key="state_current_water_consumption",
+            key="current_water_consumption",
             data_tag="state|ecoFeedback|currentWaterConsumption|value",
             translation_key="water_consumption",
             device_class=SensorDeviceClass.WATER,
@@ -631,7 +631,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.WASHER_DRYER,
         ],
         description=MieleSensorDescription(
-            key="state_current_energy_consumption",
+            key="current_energy_consumption",
             data_tag="state|ecoFeedback|currentEnergyConsumption|value",
             translation_key="energy_consumption",
             device_class=SensorDeviceClass.ENERGY,
@@ -648,7 +648,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.WASHER_DRYER,
         ],
         description=MieleSensorDescription(
-            key="state_water_forecast",
+            key="water_forecast",
             data_tag="state|ecoFeedback|waterForecast",
             translation_key="water_forecast",
             icon="mdi:water-outline",
@@ -668,7 +668,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.WASHER_DRYER,
         ],
         description=MieleSensorDescription(
-            key="state_energy_forecast",
+            key="energy_forecast",
             data_tag="state|ecoFeedback|energyForecast",
             translation_key="energy_forecast",
             icon="mdi:lightning-bolt-outline",
@@ -683,7 +683,7 @@ SENSOR_TYPES: Final[tuple[MieleSensorDefinition, ...]] = (
             MieleAppliance.ROBOT_VACUUM_CLEANER,
         ],
         description=MieleSensorDescription(
-            key="battery_level",
+            key="state_battery",
             data_tag="state|batteryLevel",
             translation_key="battery",
             device_class=SensorDeviceClass.BATTERY,
@@ -780,13 +780,13 @@ class MieleSensor(MieleEntity, SensorEntity):
     def native_value(self):
         """Return the state of the sensor."""
         if self.entity_description.key in [
-            "stateRemainingTime",
-            "stateStartTime",
+            "state_remaining_time",
+            "state_start_time",
         ]:
             return self._get_minutes()
 
         if self.entity_description.key in [
-            "stateElapsedTime",
+            "state_elapsed_time",
         ]:
             mins = self._get_minutes()
             # Keep value when program ends
@@ -805,13 +805,13 @@ class MieleSensor(MieleEntity, SensorEntity):
             return mins
 
         if self.entity_description.key in [
-            "stateRemainingTimeAbs",
-            "stateStartTimeAbs",
+            "state_remaining_time_abs",
+            "state_start_time_abs",
         ]:
             return self._get_absolute_time()
 
         if self.entity_description.key in [
-            "stateElapsedTimeAbs",
+            "state_elapsed_time_abs",
         ]:
             started_time = self._get_absolute_time(sub=True)
             # Don't update sensor if state == program_ended
@@ -833,9 +833,9 @@ class MieleSensor(MieleEntity, SensorEntity):
         # Active if logger.level is DEBUG or INFO
         if _LOGGER.getEffectiveLevel() <= logging.INFO:
             if self.entity_description.key in {
-                "stateProgramPhase",
-                "stateProgramId",
-                "stateProgramType",
+                "state_program_phase",
+                "state_program_id",
+                "state_program_type",
             }:
                 while len(self.hass.data[DOMAIN]["id_log"]) >= 500:
                     self.hass.data[DOMAIN]["id_log"].pop(0)
@@ -857,8 +857,8 @@ class MieleSensor(MieleEntity, SensorEntity):
 
         state = self.coordinator.data[self._ent][self.entity_description.status_key_raw]
         if self.entity_description.key in [
-            "stateCurrentEnergyConsumption",
-            "stateCurrentWaterConsumption",
+            "current_energy_consumption",
+            "current_water_consumption",
         ]:
             current_consumption = self.coordinator.data[self._ent].get(
                 self.entity_description.data_tag
@@ -916,7 +916,7 @@ class MieleSensor(MieleEntity, SensorEntity):
         ):
             return None
         if (
-            self.entity_description.key in ["stateProgramId", "stateProgramPhase"]
+            self.entity_description.key in ["state_program_id", "state_program_phase"]
             and self.coordinator.data[self._ent][self.entity_description.data_tag] <= 0
         ):
             return None
@@ -987,7 +987,7 @@ class MieleSensor(MieleEntity, SensorEntity):
     def available(self):
         """Return the availability of the entity."""
 
-        if self.entity_description.key == "stateStatus":
+        if self.entity_description.key == "state_status":
             return True
 
         if not self.coordinator.last_update_success:

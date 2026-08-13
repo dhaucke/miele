@@ -93,7 +93,7 @@ CLIMATE_TYPES: Final[tuple[MieleClimateDefinition, ...]] = (
             MieleAppliance.WINE_CABINET_FREEZER,
         ],
         description=MieleClimateDescription(
-            key="thermostat",
+            key="thermostat2",
             current_temperature_tag="state|temperature|1|value_raw",
             target_temperature_tag="state|targetTemperature|1|value_raw",
             name="Zone 2",
@@ -116,7 +116,7 @@ CLIMATE_TYPES: Final[tuple[MieleClimateDefinition, ...]] = (
             MieleAppliance.WINE_CABINET_FREEZER,
         ],
         description=MieleClimateDescription(
-            key="thermostat",
+            key="thermostat3",
             current_temperature_tag="state|temperature|2|value_raw",
             target_temperature_tag="state|targetTemperature|2|value_raw",
             name="Zone 3",
@@ -203,9 +203,8 @@ class MieleClimate(MieleEntity, ClimateEntity):
             name = self._ed.name
         self._attr_translation_key = name
 
-        zone = "" if self._ed.zone == 0 else f"{self._ed.zone}-"
-        # deviates from MieleEntity
-        self._attr_unique_id = f"{self._ed.key}-{zone}{self._ent}"
+        # matches core's f"{device_id}-{key}-{zone}" scheme (zone is 1-indexed there)
+        self._attr_unique_id = f"{self._ent}-{self._ed.key}-{self._ed.zone + 1}"
         self._attr_temperature_unit = self._ed.temperature_unit
         self._attr_precision = self._ed.precision
         try:

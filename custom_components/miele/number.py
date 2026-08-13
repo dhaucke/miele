@@ -174,8 +174,8 @@ class MieleNumber(MieleEntity, NumberEntity):
         self._api = hass.data[DOMAIN][entry.entry_id][API]
         self._ed = description
         _LOGGER.debug("Init number %s", ent)
-        # deviates from MieleEntity
-        self._attr_unique_id = f"{self._ed.key}-{self._ed.zone}{self._ent}"
+        # entity-first, consistent with MieleEntity/core's unique_id scheme
+        self._attr_unique_id = f"{self._ent}-{self._ed.key}-{self._ed.zone}"
         self._attr_mode = NumberMode.SLIDER
 
     @property

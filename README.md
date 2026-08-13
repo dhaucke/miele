@@ -27,7 +27,7 @@ All supported appliances show a status sensor; some show more. Freezers, refrige
 
 You need Miele cloud app credentials, registered at https://developer.miele.com/get-involved. (The older `miele.com/developer` registration page has moved there — several people hit "unable to sign up" issues on the old page before finding this.)
 
-**If the official core Miele integration is currently set up**, remove it first (Settings → Devices & services → Miele card → three-dot menu → Delete) — both share the `miele` domain, and Home Assistant will otherwise load whichever loads first.
+**If the official core Miele integration is currently set up, you do not need to remove it first.** Both integrations share the `miele` domain and use the same entity `unique_id` scheme, so installing this fork via HACS and restarting Home Assistant is enough — it takes over the existing config entry in place. Your app credentials, OAuth token, devices and entity history are preserved; you will not be asked to sign in again. The one exception is the induction-hob plate-power `number` entities and the hob-plate zone-3 target-temperature sensors, which are fork-only additions with no core equivalent and will show up as new entities.
 
 ### HACS (preferred)
 

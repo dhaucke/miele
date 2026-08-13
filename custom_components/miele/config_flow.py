@@ -27,7 +27,7 @@ class OAuth2FlowHandler(
 ):
     """Config flow to handle Miele OAuth2 authentication."""
 
-    VERSION = 2
+    VERSION = 3
     DOMAIN = DOMAIN
 
     name = None
