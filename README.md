@@ -1,4 +1,4 @@
-![Miele Integration für Home Assistant](https://raw.githubusercontent.com/dhaucke/miele/main/assets/miele-banner.svg)
+![Miele Integration für Home Assistant](https://raw.githubusercontent.com/dhaucke/miele/main/assets/miele-banner.png)
 
 # Miele
 
