@@ -3,7 +3,7 @@
 from enum import IntEnum
 
 DOMAIN = "miele"
-VERSION = "2026.8.1"
+VERSION = "2026.8.2"
 API_READ_TIMEOUT = 20
 MANUFACTURER = "Miele"
 

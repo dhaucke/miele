@@ -838,7 +838,7 @@ class MieleSensor(MieleEntity, SensorEntity):
                 "stateProgramType",
             }:
                 while len(self.hass.data[DOMAIN]["id_log"]) >= 500:
-                    self.hass.data[DOMAIN]["id_log"].pop()
+                    self.hass.data[DOMAIN]["id_log"].pop(0)
 
                 self.hass.data[DOMAIN]["id_log"].append(
                     {

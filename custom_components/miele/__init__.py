@@ -133,7 +133,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     await _setup_sensor_config(hass, config)
 
-    if CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_ID in config[DOMAIN]:
+    if CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]:
         persistent_notification.async_create(
             hass,
             "Configuration of the Miele platform in YAML is deprecated. "
@@ -173,7 +173,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         raise ConfigEntryNotReady from ex
 
     hass.data[DOMAIN][entry.entry_id] = {}
-    hass.data[DOMAIN]["id_log"] = []
+    hass.data[DOMAIN].setdefault("id_log", [])
     hass.data[DOMAIN][entry.entry_id]["retries_401"] = 0
     hass.data[DOMAIN][entry.entry_id]["timeouts"] = 0
     hass.data[DOMAIN][entry.entry_id]["listener"] = None
