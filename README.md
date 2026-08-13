@@ -87,9 +87,9 @@ Dies ist ein kleiner, unbezahlter Fork, der gepflegt wird, um ein Feature am Leb
 
 Bitte bei Bugs die Diagnosedaten aus der Miele-Integrationskarte oder der Geräteseite herunterladen und dem Issue anhängen.
 
-Ein wiederkehrendes Thema ist die Übersetzung von Programmnamen und -phasen — Miele dokumentiert das kaum. Der ursprüngliche Maintainer hat dafür eine Blueprint-Automation gebaut, die Zustände eines gewählten Sensors ins Home-Assistant-Log schreibt; sie funktioniert weiterhin: https://gist.github.com/astrandb/5ec47d6979b590639d23144142ae3100
+Ein wiederkehrendes Thema ist die Übersetzung von Programmnamen und -phasen — Miele dokumentiert das kaum. Der ursprüngliche Maintainer hat dafür eine Blueprint-Automation gebaut, die Zustände eines gewählten Sensors ins Home-Assistant-Log schreibt; sie funktioniert weiterhin (hier als Kopie unter diesem Fork gehostet): https://gist.github.com/dhaucke/8b867c194e5374566d3fbe315089af00
 
-[![Öffne deine Home-Assistant-Instanz und zeige den Blueprint-Import-Dialog mit vorausgefülltem Blueprint.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgist.github.com%2Fastrandb%2F5ec47d6979b590639d23144142ae3100)
+[![Öffne deine Home-Assistant-Instanz und zeige den Blueprint-Import-Dialog mit vorausgefülltem Blueprint.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgist.github.com%2Fdhaucke%2F8b867c194e5374566d3fbe315089af00)
 
 ## Entwicklung
 
@@ -183,9 +183,9 @@ This is a small, unpaid fork maintained to keep one feature alive, not a funded 
 
 If you find bugs, please download diagnostic information from the Miele integration card or the device page and attach it to your issue report.
 
-One recurring issue is the translation of program names and phases — Miele documents this sparsely, if at all. The original maintainer built a blueprint automation that logs states from a selected sensor to the Home Assistant log to help collect this data; it still applies here: https://gist.github.com/astrandb/5ec47d6979b590639d23144142ae3100
+One recurring issue is the translation of program names and phases — Miele documents this sparsely, if at all. The original maintainer built a blueprint automation that logs states from a selected sensor to the Home Assistant log to help collect this data; it still applies here (mirrored under this fork): https://gist.github.com/dhaucke/8b867c194e5374566d3fbe315089af00
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgist.github.com%2Fastrandb%2F5ec47d6979b590639d23144142ae3100)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgist.github.com%2Fdhaucke%2F8b867c194e5374566d3fbe315089af00)
 
 ## Development
 
