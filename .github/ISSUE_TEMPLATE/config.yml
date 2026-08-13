@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Support issue
+  - name: General usage questions
     url: https://github.com/astrandb/miele/discussions/categories/q-a
-    about: Please ask and answer questions here.
+    about: This fork has no discussions of its own - the original project's Q&A is still a good reference, since most underlying behavior is unchanged.
