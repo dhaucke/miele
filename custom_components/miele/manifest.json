@@ -23,7 +23,7 @@
   ],
   "single_config_entry": true,
   "ssdp": [],
-  "version": "2026.8.12",
+  "version": "2026.8.13",
   "zeroconf": [
     "_mieleathome._tcp.local."
   ]

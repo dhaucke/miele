@@ -189,11 +189,6 @@ class MieleVacuum(MieleEntity, StateVacuumEntity):
         return data
 
     @property
-    def battery_level(self):
-        """Return the battery level."""
-        return self.coordinator.data[self._ent]["state|batteryLevel"]
-
-    @property
     def fan_speed(self) -> str:
         """Return the fan speed."""
         if (
