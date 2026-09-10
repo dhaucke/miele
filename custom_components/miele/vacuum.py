@@ -46,11 +46,15 @@ PROG_SILENT = 4
 
 PPROGRAM_MAP = {"normal": PROG_AUTO, "turbo": PROG_TURBO, "silent": PROG_SILENT}
 
+# TURN_ON/TURN_OFF/STATUS still exist as enum members but are documented
+# "Deprecated, not supported by StateVacuumEntity" (the base class this
+# integration uses, see the class below) - HA core's vacuum-domain
+# services no longer act on them for this entity type, so declaring them
+# is dead weight. async_turn_on()/async_turn_off() below stay - they're
+# still reachable via the generic homeassistant.turn_on/turn_off services,
+# which call the entity method directly regardless of supported_features.
 SUPPORTED_FEATURES = (
-    VacuumEntityFeature.TURN_ON
-    | VacuumEntityFeature.TURN_OFF
-    | VacuumEntityFeature.STATUS
-    | VacuumEntityFeature.STATE
+    VacuumEntityFeature.STATE
     | VacuumEntityFeature.FAN_SPEED
     | VacuumEntityFeature.START
     | VacuumEntityFeature.STOP
