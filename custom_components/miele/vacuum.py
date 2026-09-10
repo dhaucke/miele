@@ -51,7 +51,6 @@ SUPPORTED_FEATURES = (
     | VacuumEntityFeature.TURN_OFF
     | VacuumEntityFeature.STATUS
     | VacuumEntityFeature.STATE
-    | VacuumEntityFeature.BATTERY
     | VacuumEntityFeature.FAN_SPEED
     | VacuumEntityFeature.START
     | VacuumEntityFeature.STOP
