@@ -19,11 +19,11 @@
   ],
   "requirements": [
     "flatdict3==0.1.0",
-    "pymiele==0.6.1"
+    "pymiele==0.6.2"
   ],
   "single_config_entry": true,
   "ssdp": [],
-  "version": "2026.9.2",
+  "version": "2026.10.0",
   "zeroconf": [
     "_mieleathome._tcp.local."
   ]
