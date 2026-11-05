@@ -205,7 +205,7 @@ class MieleClimate(MieleEntity, ClimateEntity):
 
         # matches core's f"{device_id}-{key}-{zone}" scheme (zone is 1-indexed there)
         self._attr_unique_id = f"{self._ent}-{self._ed.key}-{self._ed.zone + 1}"
-        self._attr_temperature_unit = self._ed.temperature_unit
+        self._attr_native_temperature_unit = self._ed.temperature_unit
         self._attr_precision = self._ed.precision
         try:
             self._attr_max_temp = self._eid[ACTIONS][self._ent][TARGET_TEMPERATURE][
@@ -228,7 +228,7 @@ class MieleClimate(MieleEntity, ClimateEntity):
         self._attr_supported_features = self._ed.supported_features
 
     @property
-    def current_temperature(self):
+    def native_current_temperature(self):
         """Return the current temperature."""
         return round(
             self.coordinator.data[self._ent][self._ed.current_temperature_tag] / 100,
@@ -236,7 +236,7 @@ class MieleClimate(MieleEntity, ClimateEntity):
         )
 
     @property
-    def target_temperature(self):
+    def native_target_temperature(self):
         """Return the target temperature."""
         if self.coordinator.data[self._ent].get(
             self._ed.target_temperature_tag, -32768
